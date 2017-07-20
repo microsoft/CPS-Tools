@@ -220,20 +220,20 @@ Function Test-CPSWAPServiceEndpoint {
                 RemoteComputer = $Null
             }
 
-            #region MgmtSvc-TenantSite
-            If ($WAPPublicEndpointMap."MgmtSvc-TenantSite".Split(':')[2].TrimEnd('/') -ne 443) {
+            #region MgmtSvc-TenantSite (VIP)
+            If ($WAPPublicEndpointMap."MgmtSvc-TenantSite".Split(':')[2].TrimEnd('/') -ne '') {
                 $TenantSiteVIPIUri = $WAPPublicEndpointMap."MgmtSvc-TenantSite".Substring(0,$WAPPublicEndpointMap."MgmtSvc-TenantSite".LastIndexOf(':'))
                 $WAPEndpoints += New-Object -TypeName PSObject -Property @{
                     Name = "MgmtSvc-TenantSite (VIP)"
-                    Address = (New-Uri -BaseUri "$($TenantSiteVIPIUri):443" -Path "/ping")
-                    RemoteComputer = $Null
+                    Address = (New-Uri -BaseUri "$($TenantSiteVIPIUri):$($WAPPublicEndpointMap."MgmtSvc-TenantSite".Split(':')[2].TrimEnd('/'))" -Path "/ping")
+                    RemoteComputer = "$Prefix-$((Get-Random -InputObject @("1N0201", "1N0202") -Count 1)).$env:USERDNSDOMAIN"
                 }
             }
             Else {
                 $WAPEndpoints += New-Object -TypeName PSObject -Property @{
                     Name = "MgmtSvc-TenantSite (VIP)"
                     Address = (New-Uri -BaseUri $WAPPublicEndpointMap."MgmtSvc-TenantSite" -Path "/ping")
-                    RemoteComputer = $Null
+                    RemoteComputer = "$Prefix-$((Get-Random -InputObject @("1N0201", "1N0202") -Count 1)).$env:USERDNSDOMAIN"
                 }
             }
             #endregion
@@ -247,37 +247,37 @@ Function Test-CPSWAPServiceEndpoint {
             #endregion
 
             #region MgmtSvc-TenantPublicAPI (VIP)
-            If ($WAPPublicEndpointMap."MgmtSvc-TenantPublicAPI".Split(':')[2].TrimEnd('/') -ne 443) {
+            If ($WAPPublicEndpointMap."MgmtSvc-TenantPublicAPI".Split(':')[2].TrimEnd('/') -ne '') {
                 $TenantPublicAPIUri = $WAPPublicEndpointMap."MgmtSvc-TenantPublicAPI".Substring(0,$WAPPublicEndpointMap."MgmtSvc-TenantPublicAPI".LastIndexOf(':'))
                 $WAPEndpoints += New-Object -TypeName PSObject -Property @{
                     Name = "MgmtSvc-TenantPublicAPI (VIP)"
-                    Address = (New-Uri -BaseUri "$($TenantPublicAPIUri):443" -Path "/ping")
-                    RemoteComputer = $Null
+                    Address = (New-Uri -BaseUri "$($TenantPublicAPIUri):$($WAPPublicEndpointMap."MgmtSvc-TenantPublicAPI".Split(':')[2].TrimEnd('/'))" -Path "/ping")
+                    RemoteComputer = "$Prefix$((Get-Random -InputObject @("KTP-01", "KTP-02") -Count 1)).$env:USERDNSDOMAIN"
                 }
             }
             Else {
                 $WAPEndpoints += New-Object -TypeName PSObject -Property @{
                     Name = "MgmtSvc-TenantPublicAPI (VIP)"
                     Address = (New-Uri -BaseUri $WAPPublicEndpointMap."MgmtSvc-TenantPublicAPI" -Path "/ping")
-                    RemoteComputer = $Null
+                    RemoteComputer = "$Prefix$((Get-Random -InputObject @("KTP-01", "KTP-02") -Count 1)).$env:USERDNSDOMAIN"
                 }
             }
             #endregion
 
             #region MgmtSvc-TenantPublicAPI (FQDN)
-            If ($WAPTenantPublicAPIUri.Split(':')[2].TrimEnd('/') -ne 443) {
+            If ($WAPTenantPublicAPIUri.Split(':')[2].TrimEnd('/') -ne '') {
                 $TenantPublicAPIFQDNUri = $WAPTenantPublicAPIUri.Substring(0,$WAPTenantPublicAPIUri.LastIndexOf(':'))
                 $WAPEndpoints += New-Object -TypeName PSObject -Property @{
                     Name = "MgmtSvc-TenantPublicAPI (FQDN)"
-                    Address = (New-Uri -BaseUri "$($TenantPublicAPIFQDNUri):443" -Path "/ping")
-                    RemoteComputer = $Null
+                    Address = (New-Uri -BaseUri "$($TenantPublicAPIFQDNUri):$($WAPTenantPublicAPIUri.Split(':')[2].TrimEnd('/'))" -Path "/ping")
+                    RemoteComputer = "$Prefix$((Get-Random -InputObject @("KTP-01", "KTP-02") -Count 1)).$env:USERDNSDOMAIN"
                 }
             }
             Else {
                 $WAPEndpoints += New-Object -TypeName PSObject -Property @{
                     Name = "MgmtSvc-TenantPublicAPI (FQDN)"
-                    Address = (New-Uri -BaseUri $WAPTenantPublicAPIUri -Path "/ping")
-                    RemoteComputer = $Null
+                    Address = (New-Uri -BaseUri "$($WAPTenantPublicAPIUri):30006" -Path "/ping")
+                    RemoteComputer = "$Prefix$((Get-Random -InputObject @("KTP-01", "KTP-02") -Count 1)).$env:USERDNSDOMAIN"
                 }
             }
             #endregion
